@@ -1,0 +1,9 @@
+plugins {
+    // Lets Gradle auto-download a JDK 21 toolchain (your system has Java 25).
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
+}
+
+rootProject.name = 'flight-booking-platform'
+
+include 'common'
+include 'booking-service'

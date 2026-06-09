@@ -1,0 +1,5 @@
+// Plain Java library shared across services (error shapes, common DTOs).
+// NOT a Spring Boot application — no boot plugin here.
+plugins {
+    id 'java-library'
+}
