@@ -15,9 +15,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    // Flyway (core + Postgres support module required on Boot 3.5)
-    implementation 'org.flywaydb:flyway-core'
-    implementation 'org.flywaydb:flyway-database-postgresql'
+    // API docs (Swagger UI) — not managed by the Boot BOM, so pin a version.
+    // 2.8.x is the line built against Spring Boot 3.5.x.
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.17'
 
     // Postgres driver
     runtimeOnly 'org.postgresql:postgresql'
@@ -26,12 +26,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    // Testing: Spring Boot test + Testcontainers (versions managed by the BOM)
+    // Testing kept (unused for now) for the later, deliberate testing lesson.
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
-    testImplementation 'org.testcontainers:junit-jupiter'
-    testImplementation 'org.testcontainers:postgresql'
-    testCompileOnly 'org.projectlombok:lombok'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    testAnnotationProcessor 'org.projectlombok:lombok'
 }
