@@ -3,10 +3,13 @@ package com.deanflights.flight;
 import com.deanflights.flight.dto.CreateFlightRequest;
 import com.deanflights.flight.dto.FlightResponse;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.time.LocalDate;
 
 /**
  * HTTP layer for flights. Only concerns: routing, status codes, JSON in/out, and
@@ -34,9 +37,12 @@ public class FlightController {
     }
 
     @GetMapping
-    public List<FlightResponse> list() {
-        return flightService.findAll().stream()
-                .map(FlightResponse::from)
-                .toList();
+    public Page<FlightResponse> search(
+            @RequestParam(required = false) String origin,
+            @RequestParam(required = false) String destination,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate departureDate,
+            Pageable pageable) {
+        return flightService.search(origin, destination, departureDate, pageable)
+                .map(FlightResponse::from);
     }
 }

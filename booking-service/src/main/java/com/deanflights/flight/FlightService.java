@@ -2,9 +2,13 @@ package com.deanflights.flight;
 
 import com.deanflights.common.NotFoundException;
 import com.deanflights.flight.dto.CreateFlightRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
 
 /**
  * Business logic for flights. Kept deliberately thin in this slice: map the request
@@ -38,7 +42,14 @@ public class FlightService {
                 .orElseThrow(() -> new NotFoundException("Flight not found: " + id));
     }
 
-    public List<Flight> findAll() {
-        return flightRepository.findAll();
+    public Page<Flight> search(String origin, String destination, LocalDate departureDate, Pageable pageable) {
+        Instant from = null;
+        Instant to = null;
+        if (departureDate != null) {
+            // Single-day window [from, to): start of the day to start of the next day, UTC.
+            from = departureDate.atStartOfDay().toInstant(ZoneOffset.UTC);
+            to = departureDate.plusDays(1).atStartOfDay().toInstant(ZoneOffset.UTC);
+        }
+        return flightRepository.search(origin, destination, from, to, pageable);
     }
 }
