@@ -1,5 +1,6 @@
 package com.deanflights.flight.dto;
 
+import com.deanflights.flight.validation.ValidFlightTimes;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
@@ -10,6 +11,7 @@ import java.time.Instant;
  * controller; a violation makes Spring return HTTP 400 automatically.
  * Note there is no availableSeats here — the service derives it from totalSeats.
  */
+@ValidFlightTimes
 public record CreateFlightRequest(
         @NotBlank String flightNumber,
         @NotBlank String origin,
