@@ -1,9 +1,8 @@
 package com.deanflights.flight;
 
+import com.deanflights.common.NotFoundException;
 import com.deanflights.flight.dto.CreateFlightRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -36,8 +35,7 @@ public class FlightService {
 
     public Flight getById(Long id) {
         return flightRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Flight not found: " + id));
+                .orElseThrow(() -> new NotFoundException("Flight not found: " + id));
     }
 
     public List<Flight> findAll() {
