@@ -15,4 +15,6 @@ build/
 
 # Local-only docs (kept on disk for cross-session context, NOT for the public repo)
 docs/PROJECT_LOG.md
+docs/api-conventions.md
+docs/architecture.md
 docs/superpowers/
