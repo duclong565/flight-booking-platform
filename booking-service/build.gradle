@@ -15,6 +15,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
+    // Messaging — Spring for Apache Kafka (producer + consumer). Version from the Boot BOM.
+    implementation 'org.springframework.kafka:spring-kafka'
+
     // API docs (Swagger UI) — not managed by the Boot BOM, so pin a version.
     // 2.8.x is the line built against Spring Boot 3.5.x.
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.17'

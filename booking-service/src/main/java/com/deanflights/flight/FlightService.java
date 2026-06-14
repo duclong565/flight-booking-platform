@@ -2,6 +2,8 @@ package com.deanflights.flight;
 
 import com.deanflights.common.NotFoundException;
 import com.deanflights.flight.dto.CreateFlightRequest;
+import com.deanflights.flight.event.FlightCreatedEvent;
+import com.deanflights.flight.event.FlightEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,10 +20,12 @@ import java.time.ZoneOffset;
 public class FlightService {
 
     private final FlightRepository flightRepository;
+    private final FlightEventPublisher eventPublisher;
 
-    // Constructor injection — Spring passes the repository bean in automatically.
-    public FlightService(FlightRepository flightRepository) {
+    // Constructor injection — Spring passes these beans in automatically.
+    public FlightService(FlightRepository flightRepository, FlightEventPublisher eventPublisher) {
         this.flightRepository = flightRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     public Flight create(CreateFlightRequest request) {
@@ -34,7 +38,15 @@ public class FlightService {
         flight.setTotalSeats(request.totalSeats());
         flight.setAvailableSeats(request.totalSeats()); // a brand-new flight starts full
         flight.setBasePrice(request.basePrice());
-        return flightRepository.save(flight);
+
+        Flight saved = flightRepository.save(flight);
+
+        // Publish the event AFTER the flight is safely persisted.
+        // (Note: this isn't transactional with the DB write yet — if publishing fails the
+        //  flight is still saved. The "transactional outbox" pattern fixes that; a later lesson.)
+        eventPublisher.publishFlightCreated(FlightCreatedEvent.from(saved));
+
+        return saved;
     }
 
     public Flight getById(Long id) {
