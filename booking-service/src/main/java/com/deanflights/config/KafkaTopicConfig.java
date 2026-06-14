@@ -1,5 +1,6 @@
 package com.deanflights.config;
 
+import com.deanflights.booking.event.BookingCreatedEvent;
 import com.deanflights.flight.event.FlightCreatedEvent;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +21,14 @@ public class KafkaTopicConfig {
     @Bean
     public NewTopic flightsCreatedTopic() {
         return TopicBuilder.name(FlightCreatedEvent.TOPIC)
+                .partitions(1)
+                .replicas(1)
+                .build();
+    }
+
+    @Bean
+    public NewTopic bookingsCreatedTopic() {
+        return TopicBuilder.name(BookingCreatedEvent.TOPIC)
                 .partitions(1)
                 .replicas(1)
                 .build();

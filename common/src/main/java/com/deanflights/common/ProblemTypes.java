@@ -12,6 +12,7 @@ public final class ProblemTypes {
 
     public static final URI NOT_FOUND        = URI.create(BASE + "not-found");
     public static final URI VALIDATION_ERROR = URI.create(BASE + "validation-error");
+    public static final URI BUSINESS_RULE    = URI.create(BASE + "business-rule-violation");
 
     private ProblemTypes() {}
 }

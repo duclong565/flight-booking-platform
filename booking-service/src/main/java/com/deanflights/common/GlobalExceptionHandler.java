@@ -26,6 +26,14 @@ public class GlobalExceptionHandler {
         return pd;
     }
 
+    @ExceptionHandler(BusinessRuleException.class)
+    public ProblemDetail handleBusinessRule(BusinessRuleException ex) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
+        pd.setTitle("Business rule violation");
+        pd.setType(ProblemTypes.BUSINESS_RULE);
+        return pd;
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ProblemDetail handleValidation(MethodArgumentNotValidException ex) {
         // Field errors: single-field constraints (@NotBlank, @Future, ...).
