@@ -1,5 +1,6 @@
 # Flight Booking Platform
 
+[![Live Demo](https://img.shields.io/badge/demo-live-success)](https://flight-booking-platform-9ls3.onrender.com/swagger-ui.html)
 [![CI](https://github.com/duclong565/flight-booking-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/duclong565/flight-booking-platform/actions/workflows/ci.yml)
 ![Java](https://img.shields.io/badge/Java-21-orange)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5-brightgreen)
@@ -7,7 +8,10 @@
 
 An event-driven flight booking backend built with **Java 21** and **Spring Boot 3.5** — REST APIs for searching flights and making bookings, secured with JWT, with domain events published to **Apache Kafka**. Built as a production-shaped learning project.
 
-> **One command to run the whole stack:** `docker compose up --build` → API on `http://localhost:8080`, Swagger UI at `/swagger-ui.html`.
+> **🌐 Live demo:** **https://flight-booking-platform-9ls3.onrender.com** — try the interactive API at **[`/swagger-ui.html`](https://flight-booking-platform-9ls3.onrender.com/swagger-ui.html)**.
+> _Free tier: the first request may take ~30–50s to wake the instance. Demo admin login — `admin` / `admin12345`. (The deployed demo runs without Kafka; events are exercised by the test suite and local `docker compose`.)_
+>
+> **Or run the whole stack locally:** `docker compose up --build` → API on `http://localhost:8080`, Swagger UI at `/swagger-ui.html`.
 
 ---
 
