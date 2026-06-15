@@ -48,4 +48,12 @@ dependencies {
     // Testing kept (unused for now) for the later, deliberate testing lesson.
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Integration testing with Testcontainers — spins up real Postgres + Kafka in Docker.
+    // Versions are all managed by the Spring Boot BOM (no explicit pins needed).
+    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.testcontainers:postgresql'
+    testImplementation 'org.testcontainers:kafka'
+    testImplementation 'org.awaitility:awaitility'
 }
