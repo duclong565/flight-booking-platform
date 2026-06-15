@@ -3,6 +3,7 @@ package com.deanflights.config;
 import com.deanflights.booking.event.BookingCreatedEvent;
 import com.deanflights.flight.event.FlightCreatedEvent;
 import org.apache.kafka.clients.admin.NewTopic;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.TopicBuilder;
@@ -16,6 +17,9 @@ import org.springframework.kafka.config.TopicBuilder;
  * use more partitions (parallelism) and replicas > 1 (durability).
  */
 @Configuration
+// Skip topic auto-creation when events are disabled (e.g. a free-tier deploy with no broker),
+// so KafkaAdmin doesn't try to reach a broker on startup.
+@ConditionalOnProperty(name = "app.events.enabled", havingValue = "true", matchIfMissing = true)
 public class KafkaTopicConfig {
 
     @Bean

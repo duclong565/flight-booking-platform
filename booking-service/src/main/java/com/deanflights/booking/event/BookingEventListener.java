@@ -18,7 +18,8 @@ public class BookingEventListener {
 
     private static final Logger log = LoggerFactory.getLogger(BookingEventListener.class);
 
-    @KafkaListener(topics = BookingCreatedEvent.TOPIC)
+    // autoStartup=false (via app.events.enabled) lets the app run with no broker attached.
+    @KafkaListener(topics = BookingCreatedEvent.TOPIC, autoStartup = "${app.events.enabled:true}")
     public void onBookingCreated(BookingCreatedEvent event) {
         log.info("✉️ Confirmation sent to {} for booking {} ({} seats, total {})",
                 event.passengerEmail(), event.bookingReference(),

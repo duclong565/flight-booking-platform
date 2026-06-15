@@ -1,0 +1,36 @@
+# Render Blueprint — deploy the booking-service + a managed Postgres for free.
+# Usage: push this file, then on render.com → New → Blueprint → pick this repo → Apply.
+# Docs: https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: flight-booking-platform
+    runtime: docker
+    plan: free                 # free web service (sleeps when idle; first request cold-starts)
+    region: singapore          # closest Render region to Vietnam
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: cloud
+      # Keep the JVM heap inside the 512 MB free instance.
+      - key: JAVA_TOOL_OPTIONS
+        value: "-XX:MaxRAMPercentage=70.0"
+      # Postgres connection details, pulled straight from the managed DB below.
+      - key: PGHOST
+        fromDatabase: { name: flightbooking-db, property: host }
+      - key: PGPORT
+        fromDatabase: { name: flightbooking-db, property: port }
+      - key: PGDATABASE
+        fromDatabase: { name: flightbooking-db, property: database }
+      - key: PGUSER
+        fromDatabase: { name: flightbooking-db, property: user }
+      - key: PGPASSWORD
+        fromDatabase: { name: flightbooking-db, property: password }
+
+databases:
+  - name: flightbooking-db
+    plan: free                 # free Postgres (expires after ~30 days; recreate as needed)
+    databaseName: flightbooking
+    user: flight
+    region: singapore

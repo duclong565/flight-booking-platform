@@ -18,7 +18,8 @@ public class FlightEventListener {
 
     private static final Logger log = LoggerFactory.getLogger(FlightEventListener.class);
 
-    @KafkaListener(topics = FlightCreatedEvent.TOPIC)
+    // autoStartup=false (via app.events.enabled) lets the app run with no broker attached.
+    @KafkaListener(topics = FlightCreatedEvent.TOPIC, autoStartup = "${app.events.enabled:true}")
     public void onFlightCreated(FlightCreatedEvent event) {
         log.info("📥 Received FlightCreated: flight {} ({} → {}), {} seats [id={}]",
                 event.flightNumber(), event.origin(), event.destination(),
