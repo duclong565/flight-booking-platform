@@ -57,7 +57,7 @@ public class SecurityConfig {
                         // Public: auth endpoints, reading flights, API docs, health.
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/flights/**").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/actuator/health").permitAll()
+                        .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/actuator/health").permitAll()
                         // Creating a flight is an admin-only operation.
                         .requestMatchers(HttpMethod.POST, "/api/v1/flights").hasRole("ADMIN")
                         // Bookings require a logged-in user (any role).
