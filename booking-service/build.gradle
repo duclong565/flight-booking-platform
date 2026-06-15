@@ -5,6 +5,13 @@ plugins {
     id 'org.springframework.boot'
 }
 
+// Don't produce the thin "-plain.jar" alongside the bootJar fat jar. With both
+// present, the Dockerfile's `COPY .../*.jar /app/app.jar` glob would match two
+// files and fail. We only ship the runnable fat jar, so disable the plain jar.
+tasks.named('jar') {
+    enabled = false
+}
+
 dependencies {
     // Shared library module
     implementation project(':common')

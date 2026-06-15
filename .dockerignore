@@ -1,0 +1,28 @@
+# Keep the Docker build context small and avoid leaking local-only files
+# into the image. The build runs Gradle from scratch inside the container,
+# so any locally-built outputs and IDE/VCS metadata are irrelevant.
+
+# Version control
+.git/
+.gitignore
+
+# Gradle caches and build outputs (regenerated inside the build stage)
+.gradle/
+build/
+**/build/
+**/bin/
+bin/
+
+# IDE / editor metadata
+.idea/
+.vscode/
+*.iml
+
+# Local docs (not needed at runtime; keeps them out of the image)
+docs/
+
+# Local environment / compose artifacts
+.env
+docker-compose.yml
+Dockerfile
+.dockerignore

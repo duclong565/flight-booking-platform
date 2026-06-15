@@ -28,6 +28,14 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+    # Lets `app` wait until the broker actually answers, not just until the
+    # container starts. Uses the HOST listener (localhost:9092) inside the container.
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
 
   # Optional web UI to browse topics/messages at http://localhost:8085
   kafka-ui:
@@ -41,3 +49,51 @@ services:
       DYNAMIC_CONFIG_ENABLED: "true"
     depends_on:
       - kafka
+
+  # Application database. Reached by the app over the internal network as
+  # `postgres:5432` (NOT via the host).
+  postgres:
+    image: postgres:16-alpine
+    container_name: flight-postgres
+    environment:
+      POSTGRES_DB: flightbooking
+      POSTGRES_USER: flight
+      POSTGRES_PASSWORD: flight
+    # NO host port published on purpose: the host machine already runs another
+    # Postgres on 5432. Containers reach this one internally via the service
+    # name `postgres`, so there is no port conflict and nothing is exposed.
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U flight -d flightbooking"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # The Spring Boot booking-service, built from the repo-root Dockerfile.
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flight-app
+    ports:
+      - "8080:8080"
+    # These env vars override application.properties at runtime via Spring's
+    # relaxed binding (SPRING_DATASOURCE_URL -> spring.datasource.url, etc.).
+    # Crucially they point at OTHER CONTAINERS by service name, not localhost.
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/flightbooking
+      SPRING_DATASOURCE_USERNAME: flight
+      SPRING_DATASOURCE_PASSWORD: flight
+      # Internal DOCKER listener — NOT localhost:9092 (that only works from the host).
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      APP_JWT_SECRET: ${APP_JWT_SECRET:-ZmxpZ2h0LWJvb2tpbmctZGVtby1zZWNyZXQta2V5LWNoYW5nZS1tZS0xMjM0NTY3OA==}
+      APP_ADMIN_PASSWORD: ${APP_ADMIN_PASSWORD:-admin12345}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+
+volumes:
+  postgres-data:
