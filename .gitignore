@@ -1,6 +1,7 @@
-# Gradle
+# Gradle / build output
 .gradle/
 build/
+bin/
 
 # IDE
 .idea/

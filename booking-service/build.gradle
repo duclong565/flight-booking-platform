@@ -15,6 +15,15 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
+    // Security — authentication + authorization filter chain. Version from the Boot BOM.
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // JWT (jjwt) — not managed by the Boot BOM, so pin the version. api is compile-time;
+    // impl + jackson are runtime-only (the signing/parsing engine + JSON (de)serialization).
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
+
     // Messaging — Spring for Apache Kafka (producer + consumer). Version from the Boot BOM.
     implementation 'org.springframework.kafka:spring-kafka'
 
